@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Misión Epidemiológica HTA – Juego Certificable</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 40px;
+}
+h1, h2 {
+  color: #2c3e50;
+}
+.level {
+  background: white;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.locked {
+  opacity: 0.4;
+  pointer-events: none;
+}
+button {
+  padding: 10px 15px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+}
+button:hover {
+  background: #2980b9;
+}
+.feedback {
+  margin-top: 10px;
+  font-weight: bold;
+}
+.correct { color: green; }
+.incorrect { color: red; }
+.score {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+.certificate {
+  border: 3px solid #2c3e50;
+  padding: 30px;
+  margin-top: 30px;
+  background: white;
+  display: none;
+}
+</style>
+
+<script>
+let score = 0;
+
+function check(answer, correct, feedbackId, nextLevelId) {
+  const fb = document.getElementById(feedbackId);
+  if (answer === correct) {
+    fb.innerHTML = "✔ Respuesta correcta";
+    fb.className = "feedback correct";
+    score += 10;
+    document.getElementById("score").innerText = score;
+    if (nextLevelId) {
+      document.getElementById(nextLevelId).classList.remove("locked");
+    }
+  } else {
+    fb.innerHTML = "✖ Respuesta incorrecta. Revisa el contenido.";
+    fb.className = "feedback incorrect";
+  }
+}
+
+function generateCertificate() {
+  document.getElementById("finalScore").innerText = score;
+  if (score >= 40) {
+    document.getElementById("certificate").style.display = "block";
+    window.scrollTo(0, document.body.scrollHeight);
+  } else {
+    alert("Puntuación insuficiente para certificación (mínimo 40 puntos).");
+  }
+}
+</script>
+</head>
+
+<body>
+
+<h1>🎮 Misión Epidemiológica: Tras la pista de la HTA</h1>
+<p class="score">Puntuación: <span id="score">0</span> / 60</p>
+
+<!-- NIVEL 1 -->
+<div class="level" id="level1">
+  <h2>Nivel 1 – Pregunta PICO</h2>
+  <p>¿Cuál es el outcome correcto en un estudio de prevalencia?</p>
+  <button onclick="check('a','b','fb1','level2')">Incidencia</button><br>
+  <button onclick="check('b','b','fb1','level2')">Prevalencia</button>
+  <div id="fb1"></div>
+</div>
+
+<!-- NIVEL 2 -->
+<div class="level locked" id="level2">
+  <h2>Nivel 2 – Media aritmética</h2>
+  <p>¿Cuál es la media aproximada de PAD?</p>
+  <button onclick="check('a','b','fb2','level3')">70 mmHg</button><br>
+  <button onclick="check('b','b','fb2','level3')">84 mmHg</button>
+  <div id="fb2"></div>
+</div>
+
+<!-- NIVEL 3 -->
+<div class="level locked" id="level3">
+  <h2>Nivel 3 – Intervalo de confianza</h2>
+  <p>¿El valor 74,4 mmHg está dentro del IC 95 %?</p>
+  <button onclick="check('a','b','fb3','level4')">Sí</button><br>
+  <button onclick="check('b','b','fb3','level4')">No</button>
+  <div id="fb3"></div>
+</div>
+
+<!-- NIVEL 4 -->
+<div class="level locked" id="level4">
+  <h2>Nivel 4 – Prevalencia</h2>
+  <p>58 casos de HTA entre 200 pacientes.</p>
+  <button onclick="check('a','b','fb4','level5')">29 %</button><br>
+  <button onclick="check('b','b','fb4','level5')">15 %</button>
+  <div id="fb4"></div>
+</div>
+
+<!-- NIVEL 5 -->
+<div class="level locked" id="level5">
+  <h2>Nivel 5 – Asociación estadística</h2>
+  <p>p = 0,003. ¿Existe asociación?</p>
+  <button onclick="check('a','b','fb5','level6')">No</button><br>
+  <button onclick="check('b','b','fb5','level6')">Sí</button>
+  <div id="fb5"></div>
+</div>
+
+<!-- NIVEL 6 -->
+<div class="level locked" id="level6">
+  <h2>Nivel 6 – Guías de Práctica Clínica</h2>
+  <p>¿Qué decisión es correcta?</p>
+  <button onclick="check('a','c','fb6')">No modificar la práctica</button><br>
+  <button onclick="check('b','c','fb6')">Aplicar solo el estudio local</button><br>
+  <button onclick="check('c','c','fb6')">Aplicar GPC y educación sanitaria</button>
+  <div id="fb6"></div>
+</div>
+
+<!-- INFORME FINAL -->
+<div class="level">
+  <h2>📊 Informe final</h2>
+  <button onclick="generateCertificate()">Generar informe y certificado</button>
+</div>
+
+<!-- CERTIFICADO -->
+<div class="certificate" id="certificate">
+  <h2>🎓 Certificado de Aprovechamiento</h2>
+  <p>Se certifica que el/la profesional ha superado el juego formativo:</p>
+  <p><strong>“Misión Epidemiológica: Tras la pista de la Hipertensión”</strong></p>
+  <p>Puntuación final: <strong><span id="finalScore"></span> / 60</strong></p>
+  <p>Resultado: <strong>APTO</strong></p>
+  <p>Formación continuada – Atención Primaria</p>
+  <p><em>Documento imprimible</em></p>
+</div>
+
+</body>
+</html>
